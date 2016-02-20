@@ -1,0 +1,28 @@
+{
+  "name": "gulp-remaster",
+  "version": "1.0.0",
+  "description": "A gulp plugin that allows you to edit Vinyl files directly.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*-test.js"
+  },
+  "keywords": [
+    "gulp",
+    "gulp plugin",
+    "vinyl",
+    "copy",
+    "clone",
+    "base",
+    "dirname",
+    "edit"
+  ],
+  "author": "Aaron Madsen <amadsen@codifiant.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp-util": "^3.0.7",
+    "through2": "^2.0.1"
+  },
+  "devDependencies": {
+    "tape": "^4.4.0"
+  }
+}
