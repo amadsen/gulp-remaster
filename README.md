@@ -9,8 +9,8 @@ yourself and edit them.
 You could also write a gulp plugin by wrapping Remaster.
 
 ## Use
-Like other gulp plugins, Remaster is used by calling the `.pipe()` method of a
-readable Vinyl stream, passing it an invocation of Remaster. By default, Remaster
+Like other gulp plugins, Remaster is used by passing an invocation of Remaster
+to the `.pipe()` method of a readable Vinyl stream. By default, Remaster
 will behave much like [gulp-clone](https://github.com/mariocasciaro/gulp-clone)
 in that it will make a clone of all Vinyl files found in the stream and pass
 them on. A more useful invocation of Remaster will pass a file handler function
