@@ -121,13 +121,52 @@ test('finish handler called once when passed as an option', function (assert) {
   stream.resume();
 });
 
+test('finish handler called after all instances of eachFile handler', function (assert) {
+  var count = 0,
+      expected = 3;
+  var stream = remaster({
+    eachFile: function(file, done){
+      count++;
+      done(null, file);
+    },
+    finish: function(done){
+      assert.equal(
+        count,
+        expected,
+        "Expected " + expected + " files in finish handler and counted " + count
+      );
+      count = 0;
+      done();
+    }
+  });
+
+  stream.on('end', function(){
+    assert.equal(count, 0, "Expected count reset to 0 by finish handler.");
+    assert.end();
+  });
+
+  for (var i = 0; i < expected; i++) {
+    stream.write(
+      new File({
+        cwd: "/",
+        base: "/test/",
+        path: "/test/option.eachFile_file_"+i+".txt",
+        contents: new Buffer("This is test file content #" + i)
+      })
+    );
+  }
+
+  stream.end();
+  stream.resume();
+});
+
 test('Copy Vinyl files by default', function (assert) {
   var stream = remaster( function(file, done){
     if(file !== inputFile){
       assert.equal(
         file.contents.toString(),
         inputFile.contents.toString(),
-        "Files are different objects, but contain same content."
+        "Files are different objects, but contain the same string content."
       );
     }
     done(null, file);
@@ -137,6 +176,66 @@ test('Copy Vinyl files by default', function (assert) {
     cwd: "/",
     base: "/test/",
     path: "/test/input_file.txt",
+    contents: new Buffer("This is test file content")
+  });
+
+  stream.on('end', function(){
+    assert.end();
+  });
+
+  stream.write(inputFile);
+
+  stream.end();
+  stream.resume();
+});
+
+test('`options.copy = false` disables copying Vinyl files', function (assert) {
+  var stream = remaster( {
+    copy: false,
+    eachFile: function(file, done){
+      assert.equal(file, inputFile, "Files are the same object.");
+      done(null, file);
+    }
+  });
+
+  var inputFile = new File({
+    cwd: "/",
+    base: "/test/",
+    path: "/test/another_input_file.txt",
+    contents: new Buffer("This is test file content")
+  });
+
+  stream.on('end', function(){
+    assert.end();
+  });
+
+  stream.write(inputFile);
+
+  stream.end();
+  stream.resume();
+});
+
+test('`options.copy = <Vinyl File.clone() options>` works', function (assert) {
+  var stream = remaster( {
+    copy: {
+      contents: false
+    },
+    eachFile: function(file, done){
+      if(file !== inputFile){
+        assert.equal(
+          file.contents,
+          inputFile.contents,
+          "Files are different objects, but contents are the same Buffer."
+        );
+      }
+      done(null, file);
+    }
+  });
+
+  var inputFile = new File({
+    cwd: "/",
+    base: "/test/",
+    path: "/test/yet_another_input_file.txt",
     contents: new Buffer("This is test file content")
   });
 
