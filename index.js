@@ -4,8 +4,8 @@ var through = require("through2"),
     gutil = require("gulp-util"),
     File = gutil.File;
 
-function RemasterError (msg, otps) {
-  return gutil.PluginError("gulp-remaster", msg, opts);
+function createRemasterError (msg, opts) {
+  return new gutil.PluginError("gulp-remaster", msg, opts);
 }
 
 module.exports = remaster;
@@ -25,8 +25,8 @@ function remaster(fileFn, endFn) {
   }
 
   // set our default PluginError constructor
-  if("function" !== typeof options.RemasterError){
-    options.RemasterError = RemasterError;
+  if("function" !== typeof options.createError){
+    options.createError = createRemasterError;
   }
 
   // set our default file handler, if needed
@@ -46,7 +46,7 @@ function remaster(fileFn, endFn) {
 
     // make sure it is a Vinyl file
     if(!File.isVinyl(file)){
-      done( new options.RemasterError("Received an object which is not a Vinyl file!") );
+      return done( options.createError("Received an object which is not a Vinyl file!") );
     }
 
     // copy Vinyl file
@@ -66,7 +66,7 @@ function remaster(fileFn, endFn) {
 
   if(options.finish && ("function" !== typeof options.finish || options.finish.length !== 1)){
     // throw an error complaining about improper finish function
-    throw new options.RemasterError("Invalid finish handler provided!");
+    throw options.createError("Invalid finish handler provided!");
   }
 
   stream = through.obj(filesHandler, options.finish);

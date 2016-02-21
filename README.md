@@ -70,12 +70,12 @@ If truthy, Remaster will [clone](https://github.com/gulpjs/vinyl#cloneopt) all
 Vinyl files passed through the stream before passing the clone to the eachFile
 handler. If an object, it will be passed as an options object to [clone](https://github.com/gulpjs/vinyl#cloneopt).
 
-### `RemasterError`
+### `createError`
 Default: *internal PluginError constructor*
-This is the gulp-util PluginError constructor used to generate errors inside
-Remaster. It is exposed here in case you want to use Remaster to simplify
-writing your own gulp plugin. *In that case only*, set this to your own error
-constructor.
+This is a function that will call the gulp-util PluginError constructor used to
+generate errors inside Remaster. It is exposed here in case you want to use
+Remaster to simplify writing your own gulp plugin. *In that case only*, set this
+to your own function that calls gulp-util's PluginError constructor.
 
 ## Additional Reading
 Using Remaster is essentially [Writing a Gulp Plugin](https://github.com/gulpjs/gulp/blob/master/docs/writing-a-plugin/README.md).

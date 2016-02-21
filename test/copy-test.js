@@ -120,3 +120,54 @@ test('finish handler called once when passed as an option', function (assert) {
   stream.end();
   stream.resume();
 });
+
+test('Copy Vinyl files by default', function (assert) {
+  var stream = remaster( function(file, done){
+    if(file !== inputFile){
+      assert.equal(
+        file.contents.toString(),
+        inputFile.contents.toString(),
+        "Files are different objects, but contain same content."
+      );
+    }
+    done(null, file);
+  });
+
+  var inputFile = new File({
+    cwd: "/",
+    base: "/test/",
+    path: "/test/input_file.txt",
+    contents: new Buffer("This is test file content")
+  });
+
+  stream.on('end', function(){
+    assert.end();
+  });
+
+  stream.write(inputFile);
+
+  stream.end();
+  stream.resume();
+});
+
+test('Error when stream data is not a Vinyl file', function (assert) {
+  var stream = remaster();
+
+  stream.on('error', function(e){
+    assert.pass("Recieved expected error.");
+  });
+
+  stream.on('end', function(){
+    assert.end();
+  });
+
+  stream.write({
+    cwd: "/",
+    base: "/test/",
+    path: "/test/not_vinyl_file.txt",
+    contents: new Buffer("This is not a Vinyl file.")
+  });
+
+  stream.end();
+  stream.resume();
+});
