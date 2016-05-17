@@ -45,7 +45,7 @@ function remaster(fileFn, endFn) {
         fn = options.eachFile;
 
     // make sure it is a Vinyl file
-    if(!File.isVinyl(file)){
+    if(options.strict && !File.isVinyl(file)){
       return done( options.createError("Received an object which is not a Vinyl file!") );
     }
 

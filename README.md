@@ -50,6 +50,11 @@ Default: true
 
 If truthy, Remaster will [clone](https://github.com/gulpjs/vinyl#cloneopt) all Vinyl files passed through the stream before passing the clone to the eachFile handler. If an object, it will be passed as an options object to [clone](https://github.com/gulpjs/vinyl#cloneopt).
 
+### `strict`
+Default: _undefined_
+
+If truthy, Remaster will check whether every object coming through the stream is a Vinyl file using [Vinyl's own test function](https://github.com/gulpjs/vinyl#isvinyl). This option exists and is off by default in case your workflow passes through things that act like Vinyl files, but are not. You can turn it on if you want to be sure every file object is truely a Vinyl file.
+
 ### `createError`
 Default: *internal PluginError constructor*
 

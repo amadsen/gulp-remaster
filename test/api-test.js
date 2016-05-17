@@ -249,8 +249,8 @@ test('`options.copy = <Vinyl File.clone() options>` works', function (assert) {
   stream.resume();
 });
 
-test('Error when stream data is not a Vinyl file', function (assert) {
-  var stream = remaster();
+test('Error when doing strict checking and stream data is not a Vinyl file', function (assert) {
+  var stream = remaster({strict: true});
 
   stream.on('error', function(e){
     assert.pass("Recieved expected error.");
